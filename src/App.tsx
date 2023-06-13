@@ -45,7 +45,7 @@ function App() {
                   Options
               </div>
 
-              <OptionsComponent getOptions={getOptions}/>
+              <OptionsComponent getOptions={getOptions} option={option}/>
 
               {option === Options.Units &&  <UnitsOfMeasureComponent/>}
 
