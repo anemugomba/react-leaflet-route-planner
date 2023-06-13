@@ -3,6 +3,9 @@ import {MapContainer, Marker, Popup, TileLayer} from 'react-leaflet'
 import TransportTypes from "./components/TransportTypes";
 import {Options, TravelMode} from "./models/Enums";
 import OptionsComponent from "./components/OptionsComponent";
+import UnitsOfMeasureComponent from "./components/UnitsOfMeasureComponent";
+import DepartureComponent from "./components/DepartureComponent";
+import AvoidanceComponent from "./components/AvoidanceComponent";
 
 function App() {
 
@@ -44,7 +47,11 @@ function App() {
 
               <OptionsComponent getOptions={getOptions}/>
 
+              {option === Options.Units &&  <UnitsOfMeasureComponent/>}
 
+              {option === Options.Departure &&  <DepartureComponent/>}
+
+              {option === Options.Avoidance &&  <AvoidanceComponent/>}
           </div>
 
           <div className="map-container">
