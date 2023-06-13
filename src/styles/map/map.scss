@@ -1,4 +1,8 @@
-#map {
-  background:red;
-  height:100vh;
+.container {
+  display: flex;
+  flex-direction: row;
+}
+
+.map-container {
+  flex:1
 }
