@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {MapContainer, Marker, Popup, TileLayer} from 'react-leaflet'
+import React, {useEffect, useState} from 'react';
+import L from 'leaflet'
 import TransportTypes from "./components/TransportTypes";
 import {Options, TravelMode} from "./models/Enums";
 import OptionsComponent from "./components/OptionsComponent";
@@ -19,6 +19,20 @@ function App() {
     const getOptions = (options: Options) => {
         setOption(options)
     }
+
+    useEffect(() => {
+        const map = L.map('map').setView([51.505, -0.09], 13)
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map)
+
+        return () => {
+            map.off()
+            map.remove()
+        }
+    }, [])
+
 
     return (
       <div className="container">
@@ -56,17 +70,7 @@ function App() {
           </div>
 
           <div className="map-container">
-              <MapContainer style={{height: '100vh'}} center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
-                  <TileLayer
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  <Marker position={[51.505, -0.09]}>
-                      <Popup>
-                          A pretty CSS3 popup. <br /> Easily customizable.
-                      </Popup>
-                  </Marker>
-              </MapContainer>
+              <div id="map" style={{height: '100vh'}}></div>
           </div>
       </div>
   );
