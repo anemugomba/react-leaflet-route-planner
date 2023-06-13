@@ -25,7 +25,7 @@ function App() {
 
           <div className="panel-root">
 
-              <TransportTypes getTransportTypes={getTransportTypes}/>
+              <TransportTypes getTransportTypes={getTransportTypes} mode={travelMode}/>
 
               <div className="description">
                   Click on the name to choose your starting point and destinations
@@ -52,6 +52,7 @@ function App() {
               {option === Options.Departure &&  <DepartureComponent/>}
 
               {option === Options.Avoidance &&  <AvoidanceComponent/>}
+
           </div>
 
           <div className="map-container">
