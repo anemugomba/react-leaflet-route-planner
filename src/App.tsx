@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import L from 'leaflet'
 import TransportTypes from "./components/TransportTypes";
 import {Options, TravelMode} from "./models/Enums";
@@ -6,8 +6,11 @@ import OptionsComponent from "./components/OptionsComponent";
 import UnitsOfMeasureComponent from "./components/UnitsOfMeasureComponent";
 import DepartureComponent from "./components/DepartureComponent";
 import AvoidanceComponent from "./components/AvoidanceComponent";
+import RequestService from "./services/request.service";
 
 function App() {
+
+    const map = useRef<any>();
 
     const [travelMode, setTravelMode] = useState<TravelMode>(TravelMode.Truck);
     const [option, setOption] = useState<Options>(Options.Units);
@@ -20,16 +23,22 @@ function App() {
         setOption(options)
     }
 
+    const getApiResponse = () => {
+        RequestService.getApiResponse().then(res => {
+            console.log(res);
+        })
+    };
+
     useEffect(() => {
-        const map = L.map('map').setView([51.505, -0.09], 13)
+        map.current = L.map('map').setView([51.505, -0.09], 13)
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap'
-        }).addTo(map)
+        }).addTo(map.current)
 
         return () => {
-            map.off()
-            map.remove()
+            map.current.off()
+            map.current.remove()
         }
     }, [])
 
@@ -66,6 +75,12 @@ function App() {
               {option === Options.Departure &&  <DepartureComponent/>}
 
               {option === Options.Avoidance &&  <AvoidanceComponent/>}
+
+              <hr/>
+
+              <button onClick={() => getApiResponse()}>
+                  test
+              </button>
 
           </div>
 
