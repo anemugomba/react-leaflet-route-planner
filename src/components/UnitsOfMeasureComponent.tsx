@@ -1,15 +1,26 @@
-import React from 'react';
+import React, {FC} from 'react';
 import {DistanceUnit} from "../models/Enums";
 
-const UnitsOfMeasureComponent = () => {
+type UnitsOfMeasureProps = {
+    getDistanceUnit: (unit: DistanceUnit) => void,
+    distanceUnit: DistanceUnit
+}
+
+const UnitsOfMeasureComponent: FC<UnitsOfMeasureProps> = ({getDistanceUnit, distanceUnit}) => {
+
+    const handleOnChange = (e: any) => {
+        getDistanceUnit(e.target.value)
+    }
 
     return (
         <div>
             <div>
-                <input checked={true} type="radio" value={DistanceUnit.Miles} name={DistanceUnit.Miles} /> Male
+                <input checked={distanceUnit === DistanceUnit.Miles} onChange={handleOnChange} type="radio" value={DistanceUnit.Miles} name="DistanceUnit" id="Miles"/>
+                <label htmlFor="Miles">Miles</label>
             </div>
             <div>
-                <input checked={true} type="radio" value={DistanceUnit.Kilometers} name={DistanceUnit.Kilometers} /> Female
+                <input checked={distanceUnit === DistanceUnit.Kilometers} onChange={handleOnChange} type="radio" value={DistanceUnit.Kilometers} name="DistanceUnit" id="Kilometers"/>
+                <label htmlFor="Kilometers">Kilometers</label>
             </div>
         </div>
     );

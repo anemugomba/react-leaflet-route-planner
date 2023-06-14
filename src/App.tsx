@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import L from 'leaflet'
 import TransportTypes from "./components/TransportTypes";
-import {Options, TravelMode} from "./models/Enums";
+import {DistanceUnit, Options, TravelMode} from "./models/Enums";
 import OptionsComponent from "./components/OptionsComponent";
 import UnitsOfMeasureComponent from "./components/UnitsOfMeasureComponent";
 import DepartureComponent from "./components/DepartureComponent";
@@ -14,10 +14,7 @@ function App() {
 
     const [travelMode, setTravelMode] = useState<TravelMode>(TravelMode.Truck);
     const [option, setOption] = useState<Options>(Options.Units);
-
-    const getTransportTypes = (trvMode: TravelMode) => {
-        setTravelMode(trvMode)
-    }
+    const [distanceUnit, setDistanceUnit] = useState<DistanceUnit>(DistanceUnit.Miles);
 
     const getOptions = (options: Options) => {
         setOption(options)
@@ -48,7 +45,7 @@ function App() {
 
           <div className="panel-root">
 
-              <TransportTypes getTransportTypes={getTransportTypes} mode={travelMode}/>
+              <TransportTypes getTransportTypes={setTravelMode} mode={travelMode}/>
 
               <div className="description">
                   Click on the name to choose your starting point and destinations
@@ -70,9 +67,10 @@ function App() {
 
               <OptionsComponent getOptions={getOptions} option={option}/>
 
-              {option === Options.Units &&  <UnitsOfMeasureComponent/>}
+              <div style={{padding: '10px'}}></div>
+              {option === Options.Units &&  <UnitsOfMeasureComponent getDistanceUnit={setDistanceUnit} distanceUnit={distanceUnit}/>}
 
-              {option === Options.Departure &&  <DepartureComponent/>}
+              {/*{option === Options.Departure &&  <DepartureComponent/>}*/}
 
               {option === Options.Avoidance &&  <AvoidanceComponent/>}
 
