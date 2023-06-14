@@ -15,6 +15,8 @@ function App() {
     const [travelMode, setTravelMode] = useState<TravelMode>(TravelMode.Truck);
     const [option, setOption] = useState<Options>(Options.Units);
     const [distanceUnit, setDistanceUnit] = useState<DistanceUnit>(DistanceUnit.Miles);
+    const [avoidFerries, setAvoidFerries] = useState<boolean>(false);
+    const [avoidTolls, setAvoidTolls] = useState<boolean>(false);
 
     const getOptions = (options: Options) => {
         setOption(options)
@@ -62,7 +64,7 @@ function App() {
               <hr/>
 
               <div>
-                  Options
+                  <h3>Options</h3>
               </div>
 
               <OptionsComponent getOptions={getOptions} option={option}/>
@@ -72,7 +74,7 @@ function App() {
 
               {/*{option === Options.Departure &&  <DepartureComponent/>}*/}
 
-              {option === Options.Avoidance &&  <AvoidanceComponent/>}
+              {option === Options.Avoidance &&  <AvoidanceComponent avoidFerries={avoidFerries} avoidTolls={avoidTolls} handleAvoidTolls={setAvoidTolls} handleAvoidFerries={setAvoidFerries}/>}
 
               <hr/>
 
