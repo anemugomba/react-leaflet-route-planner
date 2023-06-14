@@ -33,4 +33,15 @@
     font-weight: bold;
     font-size: large;
   }
+
+
+  .options-headings-root {
+    display: flex;
+    flex-direction: row;
+
+    .options-headings-item {
+      flex: 1
+    }
+  }
+
 }

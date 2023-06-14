@@ -7,14 +7,12 @@ interface OptionsProps {
 }
 const OptionsComponent: FC<OptionsProps> = ({getOptions, option}) => {
     return (
-        <div className="transport-types">
-            <div className="transport-type-item">
+        <div className="options-headings-root">
+            <div className="options-headings-item">
                 <button className={`button ${option === Options.Units ? 'button-active' : ''}`} onClick={() => getOptions(Options.Units)}>Units</button>
             </div>
-            {/*<div className="transport-type-item" onClick={() => getOptions(Options.Departure)}>
-                <button className={`button ${option === Options.Departure ? 'button-active' : ''}`}>Departure</button>
-            </div>*/}
-            <div className="transport-type-item" onClick={() => getOptions(Options.Avoidance)}>
+
+            <div className="options-headings-item" onClick={() => getOptions(Options.Avoidance)}>
                 <button className={`button ${option === Options.Avoidance ? 'button-active' : ''}`}>Avoidance</button>
             </div>
         </div>
