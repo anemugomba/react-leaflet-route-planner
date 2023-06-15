@@ -8,11 +8,13 @@ type FilterAddressProps = {
 const FilterAddressesComponent: FC<FilterAddressProps> = ({getAddress}) => {
 
     const debounce = useRef<any>();
+    const myRef = useRef<any>();
 
     const [places, setPlaces] = useState<Place[]>([]);
     const [place, setPlace] = useState<Place>();
     const [address, setAddress] = useState<string>('');
     const [isFocused, setIsFocused] = useState<boolean>(false);
+    const [clickedOutside, setClickedOutside] = useState(false);
 
     const onSearch = (ad: string) => {
 
@@ -39,10 +41,6 @@ const FilterAddressesComponent: FC<FilterAddressProps> = ({getAddress}) => {
         getAddress(item);
     }
 
-
-    const [clickedOutside, setClickedOutside] = useState(false);
-    const myRef = useRef<any>();
-
     const handleClickOutside = (e: any) => {
         if (!myRef.current.contains(e.target)) {
             setClickedOutside(true);
@@ -60,15 +58,12 @@ const FilterAddressesComponent: FC<FilterAddressProps> = ({getAddress}) => {
 
     return (
         <div className="addresses-root" ref={myRef} onClick={handleClickInside}>
-            <label htmlFor="address">Type address here {clickedOutside ? 'Bye!' : 'Hello!'}</label>
+            <label htmlFor="address">Type address</label>
             <input id="address"
                    className="input"
                    type="text"
                    value={address}
                    onFocus={() => setIsFocused(true)}
-                   /*onBlur={() => {
-                       setIsFocused(false)
-                   }}*/
                    onChange={e => onSearch(e.target.value)}/>
 
             {(isFocused && places.length > 0) ? (

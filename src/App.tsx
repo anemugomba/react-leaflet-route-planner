@@ -163,6 +163,8 @@ const sampleAPiResponse: LocationServiceResponse = {
 function App() {
 
     const map = useRef<any>();
+    const dragItem = useRef<any>();
+    const dragOverItem = useRef<any>();
 
     const [travelMode, setTravelMode] = useState<TravelMode>(TravelMode.Truck);
     const [option, setOption] = useState<Options>(Options.Units);
@@ -170,6 +172,7 @@ function App() {
     const [avoidFerries, setAvoidFerries] = useState<boolean>(false);
     const [avoidTolls, setAvoidTolls] = useState<boolean>(false);
     const [addresses, setAddresses] = useState<Place[]>([]);
+    const [dragEnterIndex, setDragEnterIndex] = useState<number>(-1);
 
     const getOptions = (options: Options) => {
         setOption(options)
@@ -235,7 +238,6 @@ function App() {
         return geoJson;
     }
 
-
     const removeAddress = (place_id: string) => {
         let _addresses = addresses.filter(ad => {
             return ad.place_id !== place_id
@@ -256,6 +258,25 @@ function App() {
         }
     }, [])
 
+    const dragStart = (e: any, position: number) => {
+        dragItem.current = position;
+    };
+
+    const dragEnter = (e: any, position: number) => {
+        dragOverItem.current = position;
+        setDragEnterIndex(position);
+    };
+
+    const drop = (e: any) => {
+        const copyListItems = [...addresses];
+        const dragItemContent = copyListItems[dragItem.current];
+        copyListItems.splice(dragItem.current, 1);
+        copyListItems.splice(dragOverItem.current, 0, dragItemContent);
+        dragItem.current = null;
+        dragOverItem.current = null;
+        setAddresses(copyListItems);
+        setDragEnterIndex(-1);
+    };
     return (
         <div className="container">
 
@@ -267,9 +288,13 @@ function App() {
 
                 <FilterAddressesComponent getAddress={getAddress}/>
 
-                {addresses.map((address) => {
+                {addresses.map((address, index) => {
                     return (
-                        <div className="selected-address-item">
+                        <div key={address.place_id} className={`selected-address-item ${dragEnterIndex === index ? 'rotate-10' : ''}`} draggable={true}
+                             onDragStart={(e) => dragStart(e, index)}
+                             onDragEnter={(e) => dragEnter(e, index)}
+                             onDragEnd={drop}>
+
                             <div className="selected-address-address">
                                 <div>
                                     {address.formatted_address}
