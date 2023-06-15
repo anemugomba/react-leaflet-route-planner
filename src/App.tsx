@@ -10,6 +10,8 @@ import RequestService from "./services/request.service";
 import {GeoJsonObject} from "geojson";
 import {GeoJSONProps} from "react-leaflet";
 import {LocationServiceResponse, Step} from "./models/LocationServiceResponse";
+import FilterAddressesComponent from "./components/FilterAddressesComponent";
+import Place from "./models/PlacesResponse";
 
 const sampleAPiResponse: LocationServiceResponse = {
     "Legs": [
@@ -166,6 +168,7 @@ function App() {
     const [distanceUnit, setDistanceUnit] = useState<DistanceUnit>(DistanceUnit.Miles);
     const [avoidFerries, setAvoidFerries] = useState<boolean>(false);
     const [avoidTolls, setAvoidTolls] = useState<boolean>(false);
+    const [addresses, setAddresses] = useState<Place[]>([]);
 
     const getOptions = (options: Options) => {
         setOption(options)
@@ -191,6 +194,9 @@ function App() {
         })
     }
 
+    const getAddress = (address: Place) => {
+        setAddresses(current => [...current, address]);
+    }
 
 
 
@@ -253,19 +259,27 @@ function App() {
 
                 <TransportTypes getTransportTypes={setTravelMode} mode={travelMode}/>
 
-                <div className="description">
-                    Click on the name to choose your starting point and destinations
-                </div>
-
-                <div className="estimate">
-                    70 Minutes, 40.8 Kilometers
-                </div>
-
-                <div className="points">
-
-                </div>
-
                 <hr/>
+
+                <FilterAddressesComponent getAddress={getAddress}/>
+
+                {addresses.map((address) => {
+                    return (
+                        <div className="selected-address-item">
+                            <div className="selected-address-address">
+                                <div>
+                                    {address.formatted_address}
+                                </div>
+                                <div className="selected-address-point">
+                                    Point {address.geometry.location.lat},{address.geometry.location.lng}
+                                </div>
+                            </div>
+                            <div className="selected-address-remove">
+                                <span>remove</span>
+                            </div>
+                        </div>
+                    )
+                })}
 
                 <div>
                     <h3>Options</h3>
@@ -276,8 +290,6 @@ function App() {
                 <div style={{padding: '10px'}}></div>
                 {option === Options.Units &&
                     <UnitsOfMeasureComponent getDistanceUnit={setDistanceUnit} distanceUnit={distanceUnit}/>}
-
-                {/*{option === Options.Departure &&  <DepartureComponent/>}*/}
 
                 {option === Options.Avoidance && <AvoidanceComponent avoidFerries={avoidFerries} avoidTolls={avoidTolls}
                                                                      handleAvoidTolls={setAvoidTolls}

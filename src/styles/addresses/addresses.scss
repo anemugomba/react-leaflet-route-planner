@@ -1,0 +1,49 @@
+.addresses-root {
+  position: relative;
+
+  .addresses-list-container {
+    position: absolute;
+    top: 30px;
+    z-index: 1;
+    background-color: #fff;
+    width: 100%;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border-radius: 5px;
+    padding: 10px;
+  }
+
+  .address-item {
+    padding: 5px 0 5px 5px;
+    background-color: #f3f3f3;
+    border-radius: 3px;
+    margin-bottom: 3px;
+
+    &:hover {
+      background-color: #c1ddff;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+  }
+}
+
+.selected-address-item {
+  display: flex;
+  flex-direction: row;
+  padding: 10px 0 10px 0
+}
+
+.selected-address-address {
+  flex: 1;
+}
+
+.selected-address-remove {
+  font-size: small;
+  color: red;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.selected-address-point {
+  font-weight: bold;
+  padding: 5px 0 5px 0;
+}
