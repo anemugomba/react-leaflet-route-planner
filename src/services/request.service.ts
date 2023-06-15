@@ -1,9 +1,10 @@
 import http from './http-common'
 import {LocationServiceResponse} from "../models/LocationServiceResponse";
 import {PlacesResponse} from "../models/PlacesResponse";
+import {objectToQueryParams} from "../utilities";
 class RequestService {
-    public static getRouteCalculation() {
-        return http.get<LocationServiceResponse>(`/route-planner/route-calculation`).then(res => {
+    public static getRouteCalculation(data: any) {
+        return http.post<LocationServiceResponse>(`/route-planner/route-calculation`,data).then(res => {
             return res.data;
         });
     }

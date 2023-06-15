@@ -17,7 +17,7 @@ const FilterAddressesComponent: FC<FilterAddressProps> = ({getAddress}) => {
     const [isFocused, setIsFocused] = useState<boolean>(false);
     const [clickedOutside, setClickedOutside] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(true);
+    const [error, setError] = useState(false);
 
     const onSearch = (ad: string) => {
 

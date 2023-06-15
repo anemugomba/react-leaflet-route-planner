@@ -12,6 +12,8 @@ import {GeoJSONProps} from "react-leaflet";
 import {LocationServiceResponse, Step} from "./models/LocationServiceResponse";
 import FilterAddressesComponent from "./components/FilterAddressesComponent";
 import Place from "./models/PlacesResponse";
+import {formatApiResponseToGeoJson, formatWayPointPositions} from "./utilities";
+import LoadingAnimationComponent from "./components/LoadingAnimationComponent";
 
 const sampleAPiResponse: LocationServiceResponse = {
     "Legs": [
@@ -163,6 +165,8 @@ const sampleAPiResponse: LocationServiceResponse = {
 function App() {
 
     const map = useRef<any>();
+    const addressesLayer = useRef<any>();
+
     const dragItem = useRef<any>();
     const dragOverItem = useRef<any>();
 
@@ -173,6 +177,7 @@ function App() {
     const [avoidTolls, setAvoidTolls] = useState<boolean>(false);
     const [addresses, setAddresses] = useState<Place[]>([]);
     const [dragEnterIndex, setDragEnterIndex] = useState<number>(-1);
+    const [loading, setLoading] = useState(false);
 
     const getOptions = (options: Options) => {
         setOption(options)
@@ -180,56 +185,52 @@ function App() {
 
     const getRouteCalculation = () => {
 
-        let g = formatApiResponseToGeoJson(sampleAPiResponse);
-        console.log(g)
+        let data = {
+            travelMode: travelMode,
+            distanceUnit: distanceUnit,
+            avoidTolls: avoidTolls,
+            avoidFerries: avoidFerries,
+            departurePosition: [addresses[0].geometry.location.lng, addresses[0].geometry.location.lat],
+            destinationPosition: [addresses[addresses.length - 1].geometry.location.lng, addresses[addresses.length - 1].geometry.location.lat],
+            wayPointPositions: formatWayPointPositions(addresses),
+        };
 
-        L.geoJson(g).addTo(map.current);
-
-        map.current.panTo(new L.LatLng(sampleAPiResponse.Legs[0].StartPosition[1], sampleAPiResponse.Legs[0].StartPosition[0]));
-
-        /*RequestService.getRouteCalculation().then(res => {
-
-        })*/
-    };
-
-    const getAddress = (address: Place) => {
-        setAddresses(current => [...current, address]);
-    }
-
-    const formatApiResponseToGeoJson = (res: LocationServiceResponse) => {
-        let geoJson: any = {
-            type: "FeatureCollection",
-            features: [
-                {
-                    type: "Feature",
-                    geometry: {
-                        type: "Point",
-                        coordinates: res.Legs[0].StartPosition
-                    }
-                },
-                {
-                    type: "Feature",
-                    geometry: {
-                        type: "Point",
-                        coordinates: res.Legs[0].EndPosition
-                    }
-                },
-                /*{
-                    type: "LineString",
-                    coordinates: getLatLngFromSteps(res.Legs[0].Steps)
-                }*/
-            ]
+        if (addresses.length < 2) {
+            alert('please select at least 2 addresses')
         }
 
-        res.Legs[0].Steps.forEach(res => {
-            geoJson.features.push(
-                {
-                    type: "LineString",
-                    coordinates: [res.StartPosition, res.EndPosition]
-                }
-            )
+
+
+        setLoading(true)
+        RequestService.getRouteCalculation(data).then(res => {
+            if (res.Legs.length) {
+                L.geoJson(formatApiResponseToGeoJson(res)).addTo(map.current);
+                map.current.panTo(new L.LatLng(res.Legs[0].StartPosition[1], res.Legs[0].StartPosition[0]));
+                addAddressesLayer(addresses)
+            }
+        }).finally(() => {setLoading(false)});
+
+    };
+
+    const addAddressesLayer = (addressesToAdd: Place[]) => {
+
+        if (addressesLayer.current) {
+            // addressesLayer.current.remove();
+            map.current.removeLayer(addressesLayer.current)
+        }
+
+        let _adArray: L.Layer[] = [];
+
+        addressesToAdd.forEach(ad => {
+            _adArray.push(L.marker([ad.geometry.location.lat, ad.geometry.location.lng]).bindPopup(`${ad.name}`))
         })
-        return geoJson;
+
+        addressesLayer.current = L.layerGroup(_adArray);
+
+        addressesLayer.current.addTo(map.current);
+    }
+    const getAddress = (address: Place) => {
+        setAddresses(current => [...current, address]);
     }
 
     const removeAddress = (place_id: string) => {
@@ -238,19 +239,6 @@ function App() {
         })
         setAddresses(_addresses)
     }
-
-    useEffect(() => {
-        map.current = L.map('map').setView([39.75621, -104.99404], 13)
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
-        }).addTo(map.current)
-
-        return () => {
-            map.current.off()
-            map.current.remove()
-        }
-    }, [])
 
     const dragStart = (e: any, position: number) => {
         dragItem.current = position;
@@ -271,6 +259,39 @@ function App() {
         setAddresses(copyListItems);
         setDragEnterIndex(-1);
     };
+
+    useEffect(() => {
+        map.current = L.map('map').setView([-17.8216, 31.0492], 18)
+
+        let open_street_maps_tile_layer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+            maxNativeZoom: 19,
+            maxZoom: 25
+        })
+
+        let google_tile_layer = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            maxNativeZoom: 19,
+            maxZoom: 25
+        });
+
+        let base_maps = {
+            "OpenStreetMap": open_street_maps_tile_layer,
+            "GoogleSatellite": google_tile_layer
+        };
+
+        L.control.layers(base_maps).addTo(map.current);
+
+        map.current.addLayer(google_tile_layer)
+
+        return () => {
+            map.current.off()
+            map.current.remove()
+        }
+    }, [])
+
+
+
     return (
         <div className="container">
 
@@ -295,7 +316,7 @@ function App() {
 
                             <div className="selected-address-address">
                                 <div>
-                                    ({index + 1}) {address.formatted_address}
+                                    ({index + 1}) {address.name} {address.formatted_address}
                                 </div>
                                 <div className="selected-address-point">
                                     Point {address.geometry.location.lat},{address.geometry.location.lng}
@@ -324,9 +345,15 @@ function App() {
 
                 <hr/>
 
-                <button className="button button-active" onClick={() => getRouteCalculation()}>
+                <button disabled={loading} className="button button-active" onClick={() => getRouteCalculation()}>
                     Calculate
                 </button>
+
+                {loading ? (
+                    <span style={{padding: '5px'}}>
+                        <LoadingAnimationComponent/>
+                    </span>
+                ) : null}
 
             </div>
 
