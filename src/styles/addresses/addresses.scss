@@ -33,11 +33,16 @@
 .selected-address-item {
   display: flex;
   flex-direction: row;
-  padding: 10px
+  padding: 10px;
+
+  i {
+    margin-right: 10px;
+  }
 }
 
 .selected-address-address {
   flex: 1;
+  font-size: small;
 }
 
 .selected-address-remove {

@@ -1,6 +1,7 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
 import Place from "../models/PlacesResponse";
 import RequestService from "../services/request.service";
+import LoadingAnimationComponent from "./LoadingAnimationComponent";
 
 type FilterAddressProps = {
     getAddress: (place: Place) => void
@@ -15,6 +16,8 @@ const FilterAddressesComponent: FC<FilterAddressProps> = ({getAddress}) => {
     const [address, setAddress] = useState<string>('');
     const [isFocused, setIsFocused] = useState<boolean>(false);
     const [clickedOutside, setClickedOutside] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
 
     const onSearch = (ad: string) => {
 
@@ -25,11 +28,14 @@ const FilterAddressesComponent: FC<FilterAddressProps> = ({getAddress}) => {
         debounce.current = setTimeout(() => {
 
             if (ad.length > 5) {
+                setLoading(true)
                 RequestService.getAddresses(ad).then(res => {
                     if (res.status === 'OK') {
                         setPlaces(res.results)
                     }
-                })
+                }).catch(() => {
+                    setError(false);
+                }).finally(() => setLoading(false))
             }
 
         }, 500)
@@ -58,7 +64,7 @@ const FilterAddressesComponent: FC<FilterAddressProps> = ({getAddress}) => {
 
     return (
         <div className="addresses-root" ref={myRef} onClick={handleClickInside}>
-            <label htmlFor="address">Type address</label>
+            <label htmlFor="address">Type address {loading ? <LoadingAnimationComponent/> : null}</label>
             <input id="address"
                    className="input"
                    type="text"

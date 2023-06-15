@@ -192,12 +192,6 @@ function App() {
         })*/
     };
 
-    const getAddresses = () => {
-        RequestService.getAddresses('20863 Unit A Seke Chitungwiza').then(res => {
-            console.log(res)
-        })
-    }
-
     const getAddress = (address: Place) => {
         setAddresses(current => [...current, address]);
     }
@@ -288,16 +282,20 @@ function App() {
 
                 <FilterAddressesComponent getAddress={getAddress}/>
 
+                {addresses.length > 0 ?  <label style={{fontSize: 'small', color: 'grey'}}>Drag and drop addresses in the order you want to visit them</label> : null}
+
                 {addresses.map((address, index) => {
                     return (
-                        <div key={address.place_id} className={`selected-address-item ${dragEnterIndex === index ? 'rotate-10' : ''}`} draggable={true}
+                        <div key={address.place_id} className={`${dragEnterIndex === index ? 'rotate-10' : ''} selected-address-item`} draggable={true}
                              onDragStart={(e) => dragStart(e, index)}
                              onDragEnter={(e) => dragEnter(e, index)}
                              onDragEnd={drop}>
 
+                            <i className="bi bi-arrows-expand"></i>
+
                             <div className="selected-address-address">
                                 <div>
-                                    {address.formatted_address}
+                                    ({index + 1}) {address.formatted_address}
                                 </div>
                                 <div className="selected-address-point">
                                     Point {address.geometry.location.lat},{address.geometry.location.lng}
@@ -328,11 +326,6 @@ function App() {
 
                 <button onClick={() => getRouteCalculation()}>
                     test
-                </button>
-
-
-                <button onClick={() => getAddresses()}>
-                    address
                 </button>
 
             </div>
