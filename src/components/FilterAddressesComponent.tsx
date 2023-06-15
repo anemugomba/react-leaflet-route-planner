@@ -1,4 +1,4 @@
-import React, {FC, useRef, useState} from 'react';
+import React, {FC, useEffect, useRef, useState} from 'react';
 import Place from "../models/PlacesResponse";
 import RequestService from "../services/request.service";
 
@@ -39,16 +39,40 @@ const FilterAddressesComponent: FC<FilterAddressProps> = ({getAddress}) => {
         getAddress(item);
     }
 
+
+    const [clickedOutside, setClickedOutside] = useState(false);
+    const myRef = useRef<any>();
+
+    const handleClickOutside = (e: any) => {
+        if (!myRef.current.contains(e.target)) {
+            setClickedOutside(true);
+            setIsFocused(false)
+        }
+    };
+
+    const handleClickInside = () => setClickedOutside(false);
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    });
+
+
     return (
-        <div className="addresses-root">
-            <input type="text"
+        <div className="addresses-root" ref={myRef} onClick={handleClickInside}>
+            <label htmlFor="address">Type address here {clickedOutside ? 'Bye!' : 'Hello!'}</label>
+            <input id="address"
+                   className="input"
+                   type="text"
                    value={address}
                    onFocus={() => setIsFocused(true)}
-                   /*onBlur={() => setIsFocused(false)}*/
+                   /*onBlur={() => {
+                       setIsFocused(false)
+                   }}*/
                    onChange={e => onSearch(e.target.value)}/>
 
             {(isFocused && places.length > 0) ? (
-                <div className="addresses-list-container">
+                <div className="addresses-list-container" onFocus={() => alert()}>
                     {places.map(pl => {
                         return (
                             <div className="address-item" key={pl.place_id} onClick={() => onItemClick(pl)}>
@@ -56,7 +80,6 @@ const FilterAddressesComponent: FC<FilterAddressProps> = ({getAddress}) => {
                             </div>
                         )
                     })}
-
                 </div>
             ) : null}
 

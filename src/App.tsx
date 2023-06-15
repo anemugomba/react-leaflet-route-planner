@@ -159,6 +159,7 @@ const sampleAPiResponse: LocationServiceResponse = {
         }
     }
 }
+
 function App() {
 
     const map = useRef<any>();
@@ -183,9 +184,9 @@ function App() {
 
         map.current.panTo(new L.LatLng(sampleAPiResponse.Legs[0].StartPosition[1], sampleAPiResponse.Legs[0].StartPosition[0]));
 
-        RequestService.getRouteCalculation().then(res => {
+        /*RequestService.getRouteCalculation().then(res => {
 
-        })
+        })*/
     };
 
     const getAddresses = () => {
@@ -197,9 +198,6 @@ function App() {
     const getAddress = (address: Place) => {
         setAddresses(current => [...current, address]);
     }
-
-
-
 
     const formatApiResponseToGeoJson = (res: LocationServiceResponse) => {
         let geoJson: any = {
@@ -238,6 +236,13 @@ function App() {
     }
 
 
+    const removeAddress = (place_id: string) => {
+        let _addresses = addresses.filter(ad => {
+            return ad.place_id !== place_id
+        })
+        setAddresses(_addresses)
+    }
+
     useEffect(() => {
         map.current = L.map('map').setView([39.75621, -104.99404], 13)
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -250,7 +255,6 @@ function App() {
             map.current.remove()
         }
     }, [])
-
 
     return (
         <div className="container">
@@ -275,7 +279,7 @@ function App() {
                                 </div>
                             </div>
                             <div className="selected-address-remove">
-                                <span>remove</span>
+                                <button className="button button-remove" onClick={() => removeAddress(address.place_id)}>remove</button>
                             </div>
                         </div>
                     )

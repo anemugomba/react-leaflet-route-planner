@@ -3,13 +3,17 @@
 
   .addresses-list-container {
     position: absolute;
-    top: 30px;
+    top: 60px;
     z-index: 1;
     background-color: #fff;
     width: 100%;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     border-radius: 5px;
     padding: 10px;
+    max-height: 50vh;
+    display: flex; /*added*/
+    flex-direction: column; /*added*/
+    overflow-y: scroll;
   }
 
   .address-item {
