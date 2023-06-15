@@ -324,8 +324,8 @@ function App() {
 
                 <hr/>
 
-                <button onClick={() => getRouteCalculation()}>
-                    test
+                <button className="button button-active" onClick={() => getRouteCalculation()}>
+                    Calculate
                 </button>
 
             </div>

@@ -17,11 +17,12 @@ const FilterAddressesComponent: FC<FilterAddressProps> = ({getAddress}) => {
     const [isFocused, setIsFocused] = useState<boolean>(false);
     const [clickedOutside, setClickedOutside] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
+    const [error, setError] = useState(true);
 
     const onSearch = (ad: string) => {
 
         setAddress(ad);
+        setError(false);
 
         clearTimeout(debounce.current)
 
@@ -34,7 +35,7 @@ const FilterAddressesComponent: FC<FilterAddressProps> = ({getAddress}) => {
                         setPlaces(res.results)
                     }
                 }).catch(() => {
-                    setError(false);
+                    setError(true);
                 }).finally(() => setLoading(false))
             }
 
@@ -71,6 +72,12 @@ const FilterAddressesComponent: FC<FilterAddressProps> = ({getAddress}) => {
                    value={address}
                    onFocus={() => setIsFocused(true)}
                    onChange={e => onSearch(e.target.value)}/>
+
+            {error ? (
+                <div style={{margin: '20px'}}>
+                    <small style={{color: "red"}}>An error occurred please try again later</small>
+                </div>
+            ) : null}
 
             {(isFocused && places.length > 0) ? (
                 <div className="addresses-list-container" onFocus={() => alert()}>
