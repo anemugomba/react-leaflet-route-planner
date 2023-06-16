@@ -1,166 +1,15 @@
 import React, {useEffect, useRef, useState} from 'react';
-import L, {GeoJSON} from 'leaflet'
 import TransportTypes from "./components/TransportTypes";
 import {DistanceUnit, Options, TravelMode} from "./models/Enums";
 import OptionsComponent from "./components/OptionsComponent";
 import UnitsOfMeasureComponent from "./components/UnitsOfMeasureComponent";
-import DepartureComponent from "./components/DepartureComponent";
 import AvoidanceComponent from "./components/AvoidanceComponent";
 import RequestService from "./services/request.service";
-import {GeoJsonObject} from "geojson";
-import {GeoJSONProps} from "react-leaflet";
-import {LocationServiceResponse, Step} from "./models/LocationServiceResponse";
 import FilterAddressesComponent from "./components/FilterAddressesComponent";
 import Place from "./models/PlacesResponse";
 import {formatApiResponseToGeoJson, formatWayPointPositions} from "./utilities";
 import LoadingAnimationComponent from "./components/LoadingAnimationComponent";
-
-const sampleAPiResponse: LocationServiceResponse = {
-    "Legs": [
-        {
-            "Distance": 5.762,
-            "DurationSeconds": 409,
-            "EndPosition": [
-                31.0288927,
-                -17.8120922
-            ],
-            "StartPosition": [
-                30.9924587,
-                -17.8215847
-            ],
-            "Steps": [
-                {
-                    "Distance": 0.103,
-                    "DurationSeconds": 18,
-                    "EndPosition": [
-                        30.99153,
-                        -17.82136
-                    ],
-                    "StartPosition": [
-                        30.992459,
-                        -17.821585
-                    ]
-                },
-                {
-                    "Distance": 0.222,
-                    "DurationSeconds": 20,
-                    "EndPosition": [
-                        30.99274,
-                        -17.81973
-                    ],
-                    "StartPosition": [
-                        30.99153,
-                        -17.82136
-                    ]
-                },
-                {
-                    "Distance": 0.301,
-                    "DurationSeconds": 43,
-                    "EndPosition": [
-                        30.99039,
-                        -17.81818
-                    ],
-                    "StartPosition": [
-                        30.99274,
-                        -17.81973
-                    ]
-                },
-                {
-                    "Distance": 0.492,
-                    "DurationSeconds": 49,
-                    "EndPosition": [
-                        30.99292,
-                        -17.81446
-                    ],
-                    "StartPosition": [
-                        30.99039,
-                        -17.81818
-                    ]
-                },
-                {
-                    "Distance": 3.201,
-                    "DurationSeconds": 179,
-                    "EndPosition": [
-                        31.02261,
-                        -17.81904
-                    ],
-                    "StartPosition": [
-                        30.99292,
-                        -17.81446
-                    ]
-                },
-                {
-                    "Distance": 0.957,
-                    "DurationSeconds": 55,
-                    "EndPosition": [
-                        31.02555,
-                        -17.81089
-                    ],
-                    "StartPosition": [
-                        31.02261,
-                        -17.81904
-                    ]
-                },
-                {
-                    "Distance": 0.133,
-                    "DurationSeconds": 27,
-                    "EndPosition": [
-                        31.02642,
-                        -17.81003
-                    ],
-                    "StartPosition": [
-                        31.02555,
-                        -17.81089
-                    ]
-                },
-                {
-                    "Distance": 0.353,
-                    "DurationSeconds": 18,
-                    "EndPosition": [
-                        31.028893,
-                        -17.812092
-                    ],
-                    "StartPosition": [
-                        31.02642,
-                        -17.81003
-                    ]
-                }
-            ]
-        }
-    ],
-    "Summary": {
-        "DataSource": "Here",
-        "Distance": 5.762,
-        "DistanceUnit": "Kilometers",
-        "DurationSeconds": 409,
-        "RouteBBox": [
-            30.99039,
-            -17.821585,
-            31.028893,
-            -17.81003
-        ]
-    },
-    "@metadata": {
-        "statusCode": 200,
-        "effectiveUri": "https:\/\/routes.geo.us-east-1.amazonaws.com\/routes\/v0\/calculators\/route-planner-acmg\/calculate\/route",
-        "headers": {
-            "date": "Wed, 14 Jun 2023 08:44:51 GMT",
-            "content-type": "application\/json",
-            "content-length": "1195",
-            "connection": "keep-alive",
-            "x-amzn-requestid": "1593c584-874c-470f-86b2-3b32013b2e92",
-            "access-control-allow-origin": "*",
-            "x-amz-apigw-id": "GgCgoGH1oAMFgBw=",
-            "access-control-expose-headers": "x-amzn-errortype,x-amzn-requestid,x-amzn-errormessage,x-amzn-trace-id,x-amz-apigw-id,date",
-            "x-amzn-trace-id": "Root=1-64897e03-59376c0369c641c046307c46"
-        },
-        "transferStats": {
-            "http": [
-                []
-            ]
-        }
-    }
-}
+import L from 'leaflet';
 
 function App() {
 
@@ -294,11 +143,8 @@ function App() {
 
     return (
         <div className="container">
-            <h2>{process.env.REACT_APP_API_URL_BASE}</h2>
             <div className="panel-root">
-
                 <TransportTypes getTransportTypes={setTravelMode} mode={travelMode}/>
-
                 <hr/>
 
                 <FilterAddressesComponent getAddress={getAddress}/>
