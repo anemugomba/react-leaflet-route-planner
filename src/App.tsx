@@ -201,6 +201,11 @@ function App() {
                     </span>
                 ) : null}
 
+                <div>
+                    <small>
+                        <a target="_blank" rel="noreferrer" href="https://icons8.com/icon/80449/internet">favicon</a> icon by <a target="_blank" rel="noreferrer" href="https://icons8.com">Icons8</a>
+                    </small>
+                </div>
             </div>
 
             <div className="map-container">
