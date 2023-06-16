@@ -294,7 +294,7 @@ function App() {
 
     return (
         <div className="container">
-
+            <h2>{process.env.REACT_APP_API_URL_BASE}</h2>
             <div className="panel-root">
 
                 <TransportTypes getTransportTypes={setTravelMode} mode={travelMode}/>
