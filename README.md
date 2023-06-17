@@ -9,7 +9,7 @@ This app is something I work on in my free time. I will be adding features as an
 
 ## Installation
 
-Download or clone the project. The description of how to setup the Laravel API is coming soon as it involves seting up aws and google accounts as well as deployment pipelines. Exciting times ahead.
+Download or clone the project. The description of how to setup the Laravel API is coming soon as it involves seting up aws and google accounts as well as deployment pipelines. Exciting times ahead. Run
 
 ```bash
 npm install
