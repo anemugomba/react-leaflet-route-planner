@@ -27,6 +27,7 @@
     "build": "env-cmd -f .env.development react-scripts build",
     "start-prod": "env-cmd -f .env.production react-scripts start",
     "build-prod": "env-cmd -f .env.production react-scripts build",
+    "deploy": "aws s3 sync --profile anesucainbiz build/ s3://anesucain-route-planner",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
