@@ -1,6 +1,6 @@
 # React Leaflet Route Planner
 
-This app (React, Leaflet, Laravel and Amazon Location Service) will calculate the optimal route between the origin and destination and return the travel time, distance, and route geometry. 
+This app (React, Leaflet, Laravel and Amazon Location Service, [Click here to see the app in action](http://anesucain-route-planner.s3-website-us-east-1.amazonaws.com/)) will calculate the optimal route between the origin and destination and return the travel time, distance, and route geometry. 
 You can also configure various parameters such as the transportation mode, unit of measurement, departure time, avoidances, and vehicle profile when selecting a truck as the transportation mode. 
 Some of the features are coming soon. This app was inspired by [AWS team, (click here for more information)](https://aws.amazon.com/blogs/mobile/efficient-truck-routing-with-amazon-location-service/), 
 their web application is a Vue app that uses Amazon Location Service, as the base map provider and routing engine, MapLibre GL JS, as the map rendering library, and Tailwind CSS, as the UI component library.

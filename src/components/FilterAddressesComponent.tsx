@@ -65,7 +65,7 @@ const FilterAddressesComponent: FC<FilterAddressProps> = ({getAddress}) => {
 
     return (
         <div className="addresses-root" ref={myRef} onClick={handleClickInside}>
-            <label htmlFor="address">Type address {loading ? <LoadingAnimationComponent/> : null}</label>
+            <label htmlFor="address">Type and select address {loading ? <LoadingAnimationComponent/> : null}</label>
             <input id="address"
                    className="input"
                    type="text"
