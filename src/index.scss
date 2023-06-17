@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+@import "styles/map/map";
+@import "styles/panel/panel";
+@import "styles/buttons/buttons";
+@import "styles/addresses/addresses";
+@import "styles/inputs/inputs";
+@import "styles/loading/loading";
+
+html,
+body {
+  margin: 0px;
+  height: 100%;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.rotate-10 {
+  transform: rotate(1deg);
+  background-color: rgb(245, 245, 245);
+}
